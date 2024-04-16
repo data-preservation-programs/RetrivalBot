@@ -4,6 +4,9 @@ The goal of retrieval bot is to offer a scalable framework to perform retrieval 
 
 There is no centralized orchestrator to manage retrieval queue or work. Instead, it uses MongoDB to manage work queue as well as saving retrieval results.
 
+## Result Snapshot 2024-04-16
+The retrieval success ratio and count for each SP per day per protocol has been exported into [result.zip](./result.zip)
+
 ## Workers
 Workers refer to the unit that consumes the worker queue. There are 4 basic types of workers as of now.
 
