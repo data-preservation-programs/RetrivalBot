@@ -7,6 +7,40 @@ There is no centralized orchestrator to manage retrieval queue or work. Instead,
 ## Result Snapshot 2024-04-16
 The retrieval success ratio and count for each SP per day per protocol has been exported into [result.zip](./result.zip)
 
+Query used to generate the data
+```javascript
+db.task_result.aggregate([
+  {
+    $group: {
+      _id: {
+        sp: "$task.provider.id",
+        type: "$task.module",
+        date: {
+          $dateToString: {
+            format: "%Y-%m-%d",
+            date: "$created_at",
+            timezone: "UTC",
+          }
+        },
+      },
+      count: { $sum: 1 },
+      success: { $sum: { $cond: [{ $eq: ["$result.success", true] }, 1, 0] } },
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      sp: "$_id.sp",
+      type: "$_id.type",
+      date: "$_id.date",
+      success: "$success",
+      total: "$count",
+      ratio: { $divide: ["$success", "$count"] },
+    }
+  }
+])
+```
+
 ## Workers
 Workers refer to the unit that consumes the worker queue. There are 4 basic types of workers as of now.
 
